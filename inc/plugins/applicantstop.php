@@ -395,7 +395,7 @@ function applicantstop_install()
                 }
             }
 
-                $page->add_breadcrumb_item($lang->applicantstop_add);
+                $page->add_breadcrumb_item($lang->applicantstop_add_entry_solved);
 
                 // Editor scripts
                 $page->extra_header .= <<<EOF
