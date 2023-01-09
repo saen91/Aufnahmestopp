@@ -312,7 +312,8 @@ function applicantstop_install()
 				$form_container->output_cell('<strong>'.htmlspecialchars_uni($applicantstop_entries['stoptitel']).'</strong>');
 				//Stopbeschreibung
 				$form_container->output_cell('<strong>'.htmlspecialchars_uni($applicantstop_entries['stopdesc']).'</strong>');
-				
+
+				require_once MYBB_ROOT."inc/functions.php";
 				$applicantstop_entries['startdate'] = date("d.m.Y", $applicantstop_entries['startdate']);
                 $applicantstop_entries['enddate'] = date("d.m.Y", $applicantstop_entries['enddate']);
 
@@ -505,6 +506,7 @@ EOF;
                 if (empty($errors)) {
                     $stopid = $mybb->get_input('stopid', MyBB::INPUT_INT);
 
+
 					$startdate = strtotime($db->escape_string($mybb->input['startdate']));
                     $enddate = strtotime($db->escape_string($mybb->input['enddate']));
 					
@@ -545,13 +547,13 @@ EOF;
             $sub_tabs['applicantstop'] = [
                 "title" => "Aufnahmestop Übersicht",
                  "link" => "index.php?module=config-applicantstop",
-                "description" => applicantstop_overview
+                "description" => $lang->applicantstop_overview
             ];
             
             $sub_tabs['applicantstop_entry_add'] = [
                 "title" => "Aufnahmestop hinzufügen",
                 "link" => "index.php?module=config-applicantstop&amp;action=add_entry",
-                "description" => applicantstop_add_entry_desc
+                "description" => $lang->applicantstop_add_entry_desc
             ];
             $sub_tabs['applicantstop_entry_edit'] = [
                 "title" => "Aufnahmestop Bearbeiten",
