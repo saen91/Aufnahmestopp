@@ -12,7 +12,7 @@ $l['applicantstop_add_entry_solved'] = "Ein neuer Stop wurde hinzugefügt.";
 $l['applicantstop_edit_entry'] = "Aufnahmestop bearbeiten";
 $l['applicantstop_edit_entry_desc'] = "Hier bearbeitest du einen Aufnahmestop.";
 $l['applicantstop_edit_entry_solved'] = "Der Stop wurde bearbeitet.";
-$l['applicantstop_delete_entry_solved'] = "Der Stop wurde bearbeitet.";
+$l['applicantstop_delete_entry_solved'] = "Der Stop wurde gelöscht.";
 $l['applicantstop_delete_entry_question'] = "Möchtest du den Aufnahmestop wirklich löschen?";
 
 //Allgemeines
