@@ -79,24 +79,43 @@ function applicantstop_install()
 		'title' => 'applicantstop_main',
 		'template' => $db->escape_string('<html>
 		<head>
-		<title>{$mybb->settings[\'bbname\']} - {$lang->applicantstop_name}</title>
-		{$headerinclude}</head>
-		<body>
-		{$header}
-			<table width="100%" cellspacing="5" cellpadding="5">
-				<tr>
-					TITEL
-					<td valign="top" class="trow1">
-						<div style="text-align: justify; width: 70%; margin: 20px auto;">
-                            {$lang->applicantstop_desc}
-							VERLINKUNG ZU DEN TEMPLATES 
-						</div>
-					</td>
-				</tr>
-			</table>
-		{$footer}
-		</body>
+		<title>{$settings[\'bbname\']} - {$lang->applicantstop_name}</title>
+		{$headerinclude}
+		</head>
+			<body>
+			{$header}
+				<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
+					<tr>
+						<td class="thead"><strong>{$lang->applicantstop_name}</strong></td>
+					</tr>
+					<tr>
+						<td class="trow1" align="center">
+							{$lang->applicantstop_welcome}
+						</td>
+					<tr>
+						<td  class="trow1">
+						{$aktiven}
+						{$alten}
+						</td>
+					</tr>
+					</tr>
+				</table>
+			{$footer}
+			</body>
 		</html>') ,
+		'sid' => '-1',
+		'version' => '',
+		'dateline' => TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
+		'title' => 'applicantstop_view',
+		'template' => $db->escape_string('<tr>
+        <td width="33%" valign="top">{$startdate}</td>
+		<td width="33%" valign="top"><b>{$stoptitel}</b><br>{$stopdesc}</td>
+        <td width="33%" valign="top">{$enddate}</td>
+    </tr>') ,
 		'sid' => '-1',
 		'version' => '',
 		'dateline' => TIME_NOW
@@ -105,7 +124,17 @@ function applicantstop_install()
 	
 	$insert_array = array(
 		'title' => 'applicantstop_active',
-		'template' => $db->escape_string('Template für die aktiven') ,
+		'template' => $db->escape_string('<table width="80%" style="margin:auto;">
+		<tr>
+		<td class="tcat" colspan="3">{$lang->applicantstop_titel_active}</td>
+		</tr>
+		<tr>
+			<td width="33%" class="tcat">{$lang->applicantstop_beginn}</td>
+			<td width="33%" class="tcat">{$lang->applicantstop_art}</td>
+			<td width="33%" class="tcat">{$lang->applicantstop_ende}</td>
+		</tr>
+	{$stop_view}
+	</table>') ,
 		'sid' => '-1',
 		'version' => '',
 		'dateline' => TIME_NOW
@@ -114,7 +143,17 @@ function applicantstop_install()
 	
 	$insert_array = array(
 		'title' => 'applicantstop_solved',
-		'template' => $db->escape_string('Template für die beendeten, nur wenn Ja ausgewählt ist.  ') ,
+		'template' => $db->escape_string('<table width="80%" style="margin:auto;">
+		<tr>
+		<td class="tcat" colspan="3">{$lang->applicantstop_titel_solved}</td>
+		</tr>
+		<tr>
+			<td width="33%" class="tcat">{$lang->applicantstop_beginn}</td>
+			<td width="33%" class="tcat">{$lang->applicantstop_art}</td>
+			<td width="33%" class="tcat">{$lang->applicantstop_ende}</td>
+		</tr>
+	{$stop_view}
+	</table>') ,
 		'sid' => '-1',
 		'version' => '',
 		'dateline' => TIME_NOW
@@ -642,3 +681,4 @@ EOF;
         
 }
 }
+
