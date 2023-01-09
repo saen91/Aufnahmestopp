@@ -42,7 +42,7 @@ $l['applicantstop_form_start_desc'] = "Ab wann ist der Stop gültig?";
 $l['applicantstop_form_end'] = "Enddatum";
 $l['applicantstop_form_end_desc'] = "Trage hier das Enddatum ein. Ist es noch aktiv, dann musst du nichts eintragen.";
 $l['applicantstop_form_radio'] = "Handelt es sich um einen aktuellen Stop?";
-$l['applicantstop_form_radio_desc'] = "Wähle Nein, wenn dieser Aufnahmestop beendet ist.";
+$l['applicantstop_form_radio_desc'] = "Wähle Nein, wenn dieser Aufnahmestop beendet ist. Bitte trage ein Enddatum ein, oder Lösche diesen Stop. ";
 
 //errors
 $l['applicantstop_error_titel'] = "Kein Titel angelegt!";
