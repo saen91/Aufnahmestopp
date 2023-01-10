@@ -3,10 +3,10 @@ define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'applicantstop.php');
 
 require_once "./global.php";
+$lang->load('applicantstop');
+
 // EINSTELLUNG
 $applicantstop_solvedstop = $mybb->settings['applicantstop_solvedstop'];
-global $db, $mybb, $lang;
-$lang->load('applicantstop');
 
 //HAUPTSEITE
 if (!$mybb->input['action'] == "applicantstop")
@@ -26,19 +26,19 @@ if (!$mybb->input['action'] == "applicantstop")
         $enddate = "";
         $stoptitel = "";
         $stopdesc = "";
-
-        // MIT INFOS FÜLLEN
-        $startdate = date("d.m.Y", $active['startdate']); // umwandlung von timestamp in Datum
-        $enddate_format = date("d.m.Y", $active['enddate']); // umwandlung von timestamp in Datum
-        $stoptitel = $active['stoptitel']; //Benennung des Titels
-        $stopdesc = $active['stopdesc']; //Beschreibung hinzufügen
-
-        // Wenn kein Enddatum eingetragen ist => noch offen
+		
+		// Wenn kein Enddatum eingetragen ist => noch offen
         if (!empty($active['enddate'])){
-            $enddate = $enddate_format;
+            $enddate = date("d.m.Y", $active['enddate']);
         } else {
             $enddate = "<span style='color:green;'>$lang->applicantstop_active</span>";	
         }
+
+        // MIT INFOS FÜLLEN
+        $startdate = date("d.m.Y", $active['startdate']); // umwandlung von timestamp in Datum
+        $stoptitel = $active['stoptitel']; //Benennung des Titels
+        $stopdesc = $active['stopdesc']; //Beschreibung hinzufügen
+
 
         eval("\$stop_view .= \"" . $templates->get("applicantstop_view") . "\";"); //Template für die Einzelausgabe
 
@@ -63,19 +63,19 @@ if (!$mybb->input['action'] == "applicantstop")
             $enddate = "";
             $stoptitel = "";   
             $stopdesc = "";
+			
+			// Wenn kein Enddatum eingetragen ist => noch offen
+        	if (!empty($archiv['enddate'])){
+            $enddate = date("d.m.Y", $archiv['enddate']);
+        	} else {
+            $enddate = "<span style='color:green;'>$lang->applicantstop_active</span>";	
+        	}
 
             // MIT INFOS FÜLLEN
             $startdate = date("d.m.Y", $archiv['startdate']); // umwandlung von timestamp in Datum
-            $enddate_format = date("d.m.Y", $archiv['enddate']); // umwandlung von timestamp in Datum
             $stoptitel = $archiv['stoptitel']; //Benennung des Titels
             $stopdesc = $archiv['stopdesc']; //Beschreibung hinzufügen
-   
-            // Wenn kein Enddatum eingetragen ist => noch offen
-            if (!empty($archiv['enddate'])){
-                $enddate = $enddate_format;
-            } else {
-                $enddate = $lang->applicantstop_noend;	   
-            }
+  
    
             eval("\$stop_view .= \"" . $templates->get("applicantstop_view") . "\";"); //Template für die Einzelausgabe
 
