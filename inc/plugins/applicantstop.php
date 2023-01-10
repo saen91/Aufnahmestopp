@@ -703,3 +703,38 @@ EOF;
 }
 }
 
+// ONLINE LOCATION
+$plugins->add_hook("fetch_wol_activity_end", "applicantstop_online_activity");
+$plugins->add_hook("build_friendly_wol_location_end", "applicantstop_online_location");
+
+function applicantstop_online_activity($user_activity) {
+global $parameters, $user;
+
+    $split_loc = explode(".php", $user_activity['location']);
+    if($split_loc[0] == $user['location']) {
+        $filename = '';
+    } else {
+        $filename = my_substr($split_loc[0], -my_strpos(strrev($split_loc[0]), "/"));
+    }
+    
+    switch ($filename) {
+        case 'applicantstop':
+        if(!isset($parameters['action']))
+        {
+            $user_activity['activity'] = "applicantstop";
+        }
+        break;
+    }
+      
+return $user_activity;
+}
+
+function applicantstop_online_location($plugin_array) {
+global $mybb, $theme, $lang;
+
+	if($plugin_array['user_activity']['activity'] == "applicantstop") {
+		$plugin_array['location_name'] = "Sieht sich die <a href=\"applicantstop.php\">Aufnahmestops</a> an.";
+	}
+
+return $plugin_array;
+}
