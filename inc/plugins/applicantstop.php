@@ -1,9 +1,12 @@
 <?php
+//error_reporting ( -1 );
+//ini_set ( 'display_errors', true );
 
 //Direkten Zugriff auf diese Datei aus Sicherheitsgründen nicht zulassen
 if (!defined("IN_MYBB")) {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
+
 
 //Informationen zum Plugin
 function applicantstop_info()
@@ -313,9 +316,16 @@ function applicantstop_install()
 				//Stopbeschreibung
 				$form_container->output_cell('<strong>'.htmlspecialchars_uni($applicantstop_entries['stopdesc']).'</strong>');
 
-				require_once MYBB_ROOT."inc/functions.php";
 				$applicantstop_entries['startdate'] = date("d.m.Y", $applicantstop_entries['startdate']);
-                $applicantstop_entries['enddate'] = date("d.m.Y", $applicantstop_entries['enddate']);
+				if(!empty($applicantstop_entries['enddate']))
+				   {
+					  $applicantstop_entries['enddate'] =date("d.m.Y", $applicantstop_entries['enddate']);
+				   }
+				   else
+				   {
+					  $applicantstop_entries['enddate'] ="";
+				   }
+				
 
 				//Start Datum
 				$form_container->output_cell('<strong>'.htmlspecialchars_uni($applicantstop_entries['startdate']).'</strong>');
@@ -603,7 +613,16 @@ EOF;
              );           
 			
 			$edit_entry['startdate'] = date("d.m.Y", $edit_entry['startdate']);
-            $edit_entry['enddate'] = date("d.m.Y", htmlspecialchars_uni($edit_entry['enddate']));
+			if(!empty($edit_entry['enddate']))
+			   {
+				  $edit_entry['enddate'] =date("d.m.Y", $edit_entry['enddate']);
+			   }
+			   else
+			   {
+				  $edit_entry['enddate'] ="";
+			   }
+			
+
                 
             $form_container->output_row(
                $lang->applicantstop_form_start . "<em>*</em>",
