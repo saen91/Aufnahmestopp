@@ -35,8 +35,8 @@ function applicantstop_install()
 		`stopid` int(11)  NOT NULL auto_increment, 
 		`stoptitel`varchar(500) CHARACTER SET utf8 NOT NULL,
 		`stopdesc` longtext CHARACTER SET utf8 NOT NULL,
-		`startdate` varchar (140) NOT NULL, 
-		`enddate` varchar (140) NOT NULL, 
+		`startdate` varchar (255) NOT NULL, 
+		`enddate` varchar (255) NOT NULL, 
 		`archiv` tinyint (1) NOT NULL, 
 		PRIMARY KEY (`stopid`)
 		)
