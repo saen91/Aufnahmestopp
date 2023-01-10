@@ -35,8 +35,8 @@ function applicantstop_install()
 		`stopid` int(11)  NOT NULL auto_increment, 
 		`stoptitel`varchar(500) CHARACTER SET utf8 NOT NULL,
 		`stopdesc` longtext CHARACTER SET utf8 NOT NULL,
-		`startdate` varchar (255) NOT NULL, 
-		`enddate` varchar (255) NOT NULL, 
+		`startdate` varchar (140) NOT NULL, 
+		`enddate` varchar (140) NOT NULL, 
 		`archiv` tinyint (1) NOT NULL, 
 		PRIMARY KEY (`stopid`)
 		)
@@ -398,15 +398,15 @@ function applicantstop_install()
                     $db->insert_query("applicantstop_entries", $new_entry);
 
                     $mybb->input['module'] = "applicantstop";
-                    $mybb->input['action'] = $lang->applicantstop_entry_solved;
+                    $mybb->input['action'] = $lang->applicantstop_add_entry_solved;
                     log_admin_action(htmlspecialchars_uni($mybb->input['stoptitel']));
 
-                    flash_message($lang->applicantstop_entry_solved, 'success');
+                    flash_message($lang->applicantstop_add_entry_solved, 'success');
                     admin_redirect("index.php?module=config-applicantstop");
                 }
             }
 
-                $page->add_breadcrumb_item($lang->applicantstop_add_entry_solved);
+                $page->add_breadcrumb_item($lang->applicantstop_add_entry);
 
                 // Editor scripts
                 $page->extra_header .= <<<EOF
