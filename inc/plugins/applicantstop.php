@@ -43,6 +43,7 @@ function applicantstop_install()
         ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1
     ");
 
+	$db->add_column("users", "applicantstop_new", "INT(11) NOT NULL default '0'");
 
 
 // EINSTELLUNGEN anlegen - Gruppe anlegen
@@ -95,12 +96,12 @@ function applicantstop_install()
 						<td class="trow1" align="center">
 							{$lang->applicantstop_welcome}
 						</td>
+					</tr>
 					<tr>
 						<td  class="trow1">
 						{$aktiven}
 						{$alten}
 						</td>
-					</tr>
 					</tr>
 				</table>
 			{$footer}
@@ -150,13 +151,21 @@ function applicantstop_install()
 		<tr>
 		<td class="tcat" colspan="3">{$lang->applicantstop_titel_solved}</td>
 		</tr>
-		<tr>
-			<td width="33%" class="tcat">{$lang->applicantstop_beginn}</td>
-			<td width="33%" class="tcat">{$lang->applicantstop_art}</td>
-			<td width="33%" class="tcat">{$lang->applicantstop_ende}</td>
-		</tr>
 	{$stop_view}
 	</table>') ,
+		'sid' => '-1',
+		'version' => '',
+		'dateline' => TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+	
+	//Template für den Balken
+	$insert_array = array(
+		'title' => 'applicantstop_balken',
+		'template' => $db->escape_string('<div class="pm_alert">
+            <strong>{$lang->applicantstop_alert} {$applicantstop_read}</strong>
+        </div>
+        <br />') ,
 		'sid' => '-1',
 		'version' => '',
 		'dateline' => TIME_NOW
@@ -186,6 +195,12 @@ function applicantstop_install()
 			$db->drop_table("applicantstop_entries");
 		}
 		
+		// SPALTE IN USER-DATENBANK LÖSCHEN
+		if($db->field_exists("applicantstop_new", "users"))
+		{
+			$db->drop_column("users", "applicantstop_new");
+		}
+		
 		//Einstellungen deinstallieren:
 		$db->query("DELETE FROM " . TABLE_PREFIX . "settinggroups WHERE name='aufnahmestop'"); //Gruppe löschen
 		$db->query("DELETE FROM " . TABLE_PREFIX . "settings WHERE name='applicantstop_solvedstop'"); //Einzel-Einstellung löschen
@@ -194,27 +209,88 @@ function applicantstop_install()
 		
 		//Templates löschen:
 		$db->delete_query("templates", "title LIKE '%applicantstop%'");
-	
+		
 	}
 	
-//AKTIVIEREN VOM PLUGIN - bspw. variablen einfügen (hier keine vorhanden)
+//AKTIVIEREN VOM PLUGIN - bspw. variablen einfügen für den Balken
 	function applicantstop_activate()
 	{
 		global $db, $cache;
 		require MYBB_ROOT . "/inc/adminfunctions_templates.php";
+		
+		//welches Template, welche variable wird gesucht, welche soll eingesetzt werden und wie sieht es dann aus?
+		find_replace_templatesets('header', '#'.preg_quote('{$bbclosedwarning}').'#', '{$new_applicantstop} {$bbclosedwarning}');
+		
 	
 	}
 	
-//DEAKTIVIEREN VOM PLUGIN - bspw. variablen entfernen (hier keine vorhanden)
+//DEAKTIVIEREN VOM PLUGIN - bspw. variablen entfernen für den Balken
 	function applicantstop_deactivate()
 	{
 		global $db, $cache;
-		require_once MYBB_ADMIN_DIR . "inc/functions_themes.php";
+		require MYBB_ROOT . "/inc/adminfunctions_templates.php";
+		//Variable wieder aus TPL entfernen.
+		 find_replace_templatesets("header", "#".preg_quote('{$new_applicantstop}')."#i", '', 0);
 	
 	}
 
 
 // DIE GANZE MAGIE!
+$plugins->add_hook('global_start', 'applicantstop_global');
+//Für den Balken!
+//damit der auch funktioniert, siehe auch add_entry... 
+function applicantstop_global() 
+{
+	global $db, $mybb, $templates, $new_applicantstop, $applicantstop_read, $lang;
+	$lang->load('applicantstop');
+	
+	//holen der Userid
+	$uid = $mybb->user['uid'];
+	
+	$applicantstop_read = "<a href='applicantstop.php?action=applicantstop_read&read={$uid}' original-title='Als gelesen markieren'><i class=\"fas fa-trash\" style=\"float: right;font-size: 14px;padding: 1px;\"></i></a>";
+	
+	//abrufen der Daten vom applicantstop 
+	$select = $db->query("SELECT * FROM " . TABLE_PREFIX . "applicantstop_entries");
+	$readornot = $db->num_rows($select);
+	if ($readornot > 0) 
+	{
+		//auslese von Tabelle Users
+		$select = $db->query("SELECT applicantstop_new FROM " . TABLE_PREFIX . "users
+		WHERE uid = '" . $mybb->user['uid'] . "' LIMIT 1");
+		
+		//in den Daten suchen, wenn applicantstop_new ist 0, dann Template für den Balken ausgeben. 
+		$data = $db->fetch_array($select);
+		if ($data['applicantstop_new'] == '0') {
+						
+			eval("\$new_applicantstop = \"" . $templates->get ("applicantstop_balken") . "\";");
+		}
+			
+	}
+}
+
+
+//Trage ein, wenn ein User angegeben hat, dass er die Info, dass es neue Stops gibt, gelesen hat
+if ($mybb->get_input('action') == "applicantstop_read") {
+
+		//welcher user ist online
+		$this_user = intval($mybb->user['uid']);
+
+		//für den fall dass er/sie nicht mit dem hauptaccount online
+			$as_uid = intval($mybb->user['as_uid']);
+			$read = $mybb->input['read'];
+			if ($read) {
+				if ($as_uid == 0){
+					$db->query("UPDATE " . TABLE_PREFIX . "users SET applicantstop_new = 1  WHERE (as_uid = $this_user) OR (uid = $this_user)");
+				}elseif ($as_uid != 0){
+					$db->query("UPDATE " . TABLE_PREFIX . "users SET applicantstop_new = 1  WHERE (as_uid = $as_uid) OR (uid = $this_user) OR (uid = $as_uid)");
+				}
+				
+				
+				redirect("index.php","Du hast die Stops erfolgreich als gelesen markiert.");
+			}
+}
+
+
 // Admin CP konfigurieren - 
 	//Action Handler erstellen
 	$plugins->add_hook("admin_config_action_handler", "applicantstop_admin_config_action_handler");
@@ -396,6 +472,8 @@ function applicantstop_install()
                     );
 
                     $db->insert_query("applicantstop_entries", $new_entry);
+					//für den Balken, damit er weiß es gibt einen neuen Eintrag. Er setzt die spalte in der users auf 0
+					$db->query("UPDATE ".TABLE_PREFIX."users SET applicantstop_new ='0'");
 
                     $mybb->input['module'] = "applicantstop";
                     $mybb->input['action'] = $lang->applicantstop_add_entry_solved;
@@ -493,6 +571,7 @@ EOF;
     
                 exit;         
         }
+
         
         
         if ($mybb->input['action'] == "edit_entry") {
@@ -702,6 +781,32 @@ EOF;
         
 }
 }
+
+
+//Trage ein, wenn ein User angegeben hat, dass er die Info, dass es neue Stops gibt, gelesen hat
+if ($mybb->get_input('action') == "applicantstop_read") {
+
+		//welcher user ist online
+		$this_user = intval($mybb->user['uid']);
+
+		//für den fall dass er/sie nicht mit dem hauptaccount online
+			$as_uid = intval($mybb->user['as_uid']);
+			$read = $mybb->input['read'];
+			if ($read) {
+				if ($as_uid == 0){
+					$db->query("UPDATE " . TABLE_PREFIX . "users SET applicantstop_new = 1  WHERE (as_uid = $this_user) OR (uid = $this_user)");
+				}elseif ($as_uid != 0){
+					$db->query("UPDATE " . TABLE_PREFIX . "users SET applicantstop_new = 1  WHERE (as_uid = $as_uid) OR (uid = $this_user) OR (uid = $as_uid)");
+				}
+				
+				
+				redirect("index.php","Du hast erfolgreich das ganze als gelesen markiert");
+			}
+}
+
+
+
+
 
 // ONLINE LOCATION
 $plugins->add_hook("fetch_wol_activity_end", "applicantstop_online_activity");
