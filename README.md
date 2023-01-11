@@ -30,3 +30,6 @@ Ansicht beim Editieren des Stops.
 Balken, wenn es einen neuen Stop gibt. 
 ![This is an image](https://thesilverdoe.de/aaasaen/plugins/applicantstop-alert.PNG)
 
+
+## Dankesagungen
+Danke geht hierbei an [ItsSparksFly](https://github.com/ItsSparksFly), [katjalennartz](https://github.com/katjalennartz) und [little-evil-genius](https://github.com/little-evil-genius) für die tolle Unterstützung und Hilfe!
