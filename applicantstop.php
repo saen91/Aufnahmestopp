@@ -88,4 +88,6 @@ if (!$mybb->input['action'] == "applicantstop")
     output_page($page);
 }
 
+
+
 ?>
