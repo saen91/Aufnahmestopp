@@ -244,6 +244,9 @@ function applicantstop_global()
 	global $db, $mybb, $templates, $new_applicantstop, $applicantstop_read, $lang, $action_file;
 	$lang->load('applicantstop');
 	
+	//Action Baum bauen
+	$mybb->input['action'] = $mybb->get_input('action');
+	
 	//holen der Userid
 	$uid = $mybb->user['uid'];
 	
@@ -268,7 +271,8 @@ function applicantstop_global()
 	}
 	
 	//Trage ein, wenn ein User angegeben hat, dass er die Info, dass es neue Stops gibt, gelesen hat
-	if ($mybb->input['action'] == 'applicantstop_read') {
+	
+	if ($mybb->get_input('action') == "applicantstop_read") {
 
 		//welcher user ist online
 		$this_user = intval($mybb->user['uid']);
