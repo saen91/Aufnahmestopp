@@ -1,6 +1,6 @@
 <?php
-//error_reporting ( -1 );
-//ini_set ( 'display_errors', true );
+error_reporting ( -1 );
+ini_set ( 'display_errors', true );
 
 //Direkten Zugriff auf diese Datei aus Sicherheitsgründen nicht zulassen
 if (!defined("IN_MYBB")) {
