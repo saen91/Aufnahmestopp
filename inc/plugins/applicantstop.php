@@ -1,6 +1,6 @@
 <?php
-error_reporting ( -1 );
-ini_set ( 'display_errors', true );
+//error_reporting ( -1 );
+//ini_set ( 'display_errors', true );
 
 //Direkten Zugriff auf diese Datei aus Sicherheitsgründen nicht zulassen
 if (!defined("IN_MYBB")) {
@@ -241,7 +241,7 @@ $plugins->add_hook('global_start', 'applicantstop_global');
 //damit der auch funktioniert, siehe auch add_entry... 
 function applicantstop_global() 
 {
-	global $db, $mybb, $templates, $new_applicantstop, $applicantstop_read, $lang;
+	global $db, $mybb, $templates, $new_applicantstop, $applicantstop_read, $lang, $action_file;
 	$lang->load('applicantstop');
 	
 	//holen der Userid
@@ -266,11 +266,9 @@ function applicantstop_global()
 		}
 			
 	}
-}
-
-
-//Trage ein, wenn ein User angegeben hat, dass er die Info, dass es neue Stops gibt, gelesen hat
-if ($mybb->get_input('action') == "applicantstop_read") {
+	
+	//Trage ein, wenn ein User angegeben hat, dass er die Info, dass es neue Stops gibt, gelesen hat
+	if ($mybb->input['action'] == 'applicantstop_read') {
 
 		//welcher user ist online
 		$this_user = intval($mybb->user['uid']);
@@ -288,7 +286,9 @@ if ($mybb->get_input('action') == "applicantstop_read") {
 				
 				redirect("index.php","Du hast die Stops erfolgreich als gelesen markiert.");
 			}
+	}
 }
+
 
 
 // Admin CP konfigurieren - 
@@ -781,31 +781,6 @@ EOF;
         
 }
 }
-
-
-//Trage ein, wenn ein User angegeben hat, dass er die Info, dass es neue Stops gibt, gelesen hat
-if ($mybb->get_input('action') == "applicantstop_read") {
-
-		//welcher user ist online
-		$this_user = intval($mybb->user['uid']);
-
-		//für den fall dass er/sie nicht mit dem hauptaccount online
-			$as_uid = intval($mybb->user['as_uid']);
-			$read = $mybb->input['read'];
-			if ($read) {
-				if ($as_uid == 0){
-					$db->query("UPDATE " . TABLE_PREFIX . "users SET applicantstop_new = 1  WHERE (as_uid = $this_user) OR (uid = $this_user)");
-				}elseif ($as_uid != 0){
-					$db->query("UPDATE " . TABLE_PREFIX . "users SET applicantstop_new = 1  WHERE (as_uid = $as_uid) OR (uid = $this_user) OR (uid = $as_uid)");
-				}
-				
-				
-				redirect("index.php","Du hast erfolgreich das ganze als gelesen markiert");
-			}
-}
-
-
-
 
 
 // ONLINE LOCATION
