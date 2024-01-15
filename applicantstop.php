@@ -26,6 +26,8 @@ if (!$mybb->input['action'] == "applicantstop")
         $enddate = "";
         $stoptitel = "";
         $stopdesc = "";
+		$stopview ="";
+		$aktiven ="";
 		
 		// Wenn kein Enddatum eingetragen ist => noch offen
         if (!empty($active['enddate'])){
@@ -55,7 +57,8 @@ if (!$mybb->input['action'] == "applicantstop")
         $query_archiv = $db->query($sql_archiv);
 
         // Leer laufen lassen, damit es nicht an die aktiven gehängt wird
-        $stop_view = "";   
+        $stop_view = "";  
+		$alten = "";
         while ($archiv = $db->fetch_array($query_archiv)){
 
             // LEER LAUFEN LASSEN, SONST STEHEN INHALTE VON VORHER DRINNEN VOR ALLEM BEI PHP 8 BEACHTEN!!!
