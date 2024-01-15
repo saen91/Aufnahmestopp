@@ -467,7 +467,7 @@ function applicantstop_global()
                     $enddate = strtotime($db->escape_string($mybb->input['enddate']));
 					
                     $new_entry = array(
-                        "stopid" => (int)$mybb->input['stopid'],
+                        "stopid" => isset($mybb->input['stopid']) ? (int)$mybb->input['stopid'] : 0,
                         "stoptitel" => $db->escape_string($mybb->input['stoptitel']),
                         "stopdesc" => $db->escape_string($mybb->input['stopdesc']),
 						"archiv" => intval($mybb->input['archiv']),
@@ -530,10 +530,10 @@ EOF;
                 $form_container->output_row(
                     $lang->applicantstop_form_titel."<em>*</em>",
                     $lang->applicantstop_form_titel_desc,
-                    $form->generate_text_box('stoptitel', $mybb->input['stoptitel'])
+                    $form->generate_text_box('stoptitel', isset($mybb->input['stoptitel']) ? $mybb->input['stoptitel'] : '')
                 );
                
-                $text_editor = $form->generate_text_area('stopdesc', $mybb->input['stopdesc'], array(
+                $text_editor = $form->generate_text_area('stopdesc',  isset($mybb->input['stopdesc']) ? $mybb->input['stopdesc'] : '', array(
                     'id' => 'stopdesc',
                     'rows' => '25',
                     'cols' => '70',
@@ -552,13 +552,13 @@ EOF;
                 $form_container->output_row(
                     $lang->applicantstop_form_start. "<em>*</em>",
                     $lang->applicantstop_form_start_desc,
-                    $form->generate_text_box('startdate', $mybb->input['startdate'])
+                    $form->generate_text_box('startdate', isset($mybb->input['startdate']) ? $mybb->input['startdate'] : '')
                 );
 			 
 			 	$form_container->output_row(
                     $lang->applicantstop_form_end,
                     $lang->applicantstop_form_end_desc,
-                    $form->generate_text_box('enddate', $mybb->input['enddate'])
+                    $form->generate_text_box('enddate', isset($mybb->input['enddate']) ? $mybb->input['enddate'] : '')
                 );
  
 			 	$form_container->output_row(
